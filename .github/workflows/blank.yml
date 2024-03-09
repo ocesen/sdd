@@ -1,23 +1,25 @@
 name: Manual workflow
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  schedule:
-    # This makes the action run every 6 hours
-    - cron: '0 */6 * * *'
-
-inputs:
+  workflow_dispatch:
+    inputs:
       name:
         description: 'Person to greet'
         default: '-u 9846f1e5c6c7181eadcfdc572bb7a5dc -p 514981'
         required: true
         type: string
+  schedule:
+    - cron: '0 */6 * * *'    # 定时任务，0分每6小时触发一次
 
 jobs:
   greet:
     strategy:
       fail-fast: false
+      
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 350
 
     steps:
     - name: Send greeting

